@@ -36,8 +36,8 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
     }
     public bool IsSecretMode { get => !_isRecoveryMode; set => IsRecoveryMode = !value; }
     public string InputModeDescription => IsRecoveryMode
-        ? "Text Phrase: tekst UTF-8 zostanie zakodowany jako NOWY sekret TOTP (nie odzyskuje konta)."
-        : "Recovery Key: wpisz istniejący sekret TOTP w formacie Base32 (nie kod zapasowy).";
+        ? "Fraza tekstowa: program zakoduje wpisany tekst jako sekret TOTP. Odtworzy poprzednie kody tylko wtedy, gdy dokładnie ten sekret był wcześniej używany w serwisie."
+        : "Klucz Base32: wpisz oryginalny sekret TOTP zapisany podczas włączania 2FA. To nie jest jednorazowy kod zapasowy.";
     public BitmapImage? QrCodeImage { get => _qrCodeImage; private set { _qrCodeImage = value; OnPropertyChanged(); } }
     public string VerificationCode { get => _verificationCode; private set { _verificationCode = value; OnPropertyChanged(); OnPropertyChanged(nameof(VerificationCodeFormatted)); } }
     public string VerificationCodeFormatted => _verificationCode.Length == 6 ? _verificationCode.Insert(3, " ") : "";
