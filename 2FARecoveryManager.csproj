@@ -11,10 +11,15 @@
     <AssemblyName>2FARecoveryManager</AssemblyName>
     <Authors>Leszek Dedko</Authors>
     <Copyright>Copyright (c) 2026 Leszek Dedko</Copyright>
+    <ApplicationIcon>2FARecoveryManager.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
     <Compile Remove="tests/**/*.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="2FARecoveryManager.ico" />
   </ItemGroup>
 
   <ItemGroup>
