@@ -47,3 +47,6 @@ This project's source code is released under the [MIT License](LICENSE). See [TH
 The current implementation keeps the entered secret in application memory, displays the secret in the interface and can copy it to the clipboard. It is **not** a secure credential vault. Review the source and your threat model before handling real authentication secrets.
 
 Copyright (c) 2026 Leszek Dedko.
+
+## Release installer
+On Windows, install .NET 10 SDK and Inno Setup 7, then run `./scripts/build-release.ps1` in PowerShell. The script runs tests, publishes a framework-dependent win-x64 build and creates an installer in `dist/`. Installer language follows Windows language (Polish or English). The app requires .NET 10 Desktop Runtime installed separately.
