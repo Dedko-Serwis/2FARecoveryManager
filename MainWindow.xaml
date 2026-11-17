@@ -23,13 +23,13 @@
                 Padding="20" 
                 Margin="0,0,15,0">
             <StackPanel>
-                <TextBlock Text="Konfiguracja OTP" 
+                <TextBlock Text="Odtwarzanie konfiguracji 2FA" 
                            FontSize="18" 
                            FontWeight="Bold" 
                            Margin="0,0,0,20"
                            Foreground="#2C3E50"/>
 
-                <TextBlock Text="Wystawca (Issuer)" 
+                <TextBlock Text="Serwis / wystawca (np. GitHub)" 
                            FontWeight="SemiBold" 
                            Foreground="#34495E"
                            Margin="0,0,0,5"/>
@@ -40,7 +40,7 @@
                          BorderThickness="1"
                          FontSize="13"/>
 
-                <TextBlock Text="Konto (Account)" 
+                <TextBlock Text="Nazwa konta (np. adres e-mail)" 
                            FontWeight="SemiBold" 
                            Foreground="#34495E"
                            Margin="0,0,0,5"/>
@@ -52,17 +52,17 @@
                          FontSize="13"/>
 
                 <!-- Tryb wprowadzania -->
-                <TextBlock Text="Tryb wprowadzania" 
+                <TextBlock Text="Format zapisanego sekretu" 
                            FontWeight="SemiBold" 
                            Foreground="#34495E"
                            Margin="0,0,0,5"/>
 
                 <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
-                    <RadioButton Content="Text Phrase" 
+                    <RadioButton Content="Fraza tekstowa (UTF-8)" 
                                  IsChecked="{Binding IsRecoveryMode}"
                                  Margin="0,0,15,0"
                                  FontWeight="Bold"/>
-                    <RadioButton Content="Recovery Key (Base32)" 
+                    <RadioButton Content="Klucz TOTP (Base32)" 
                                  IsChecked="{Binding IsSecretMode}"
                                  Margin="0,0,15,0"
                                  FontWeight="Bold"/>
@@ -75,7 +75,7 @@
                            TextWrapping="Wrap"/>
 
                 <!-- Fraza / Klucz -->
-                <TextBlock Text="Wartosc" 
+                <TextBlock Text="Zapisana fraza lub klucz" 
                            FontWeight="SemiBold" 
                            Foreground="#34495E"
                            Margin="0,0,0,5"/>
@@ -100,7 +100,7 @@
                         </Grid.ColumnDefinitions>
 
                         <StackPanel>
-                            <TextBlock Text="Generated Base32 Secret"
+                            <TextBlock Text="Sekret Base32 utworzony z frazy"
                        FontSize="11"
                        FontWeight="Bold"
                        Foreground="#566573"/>
@@ -118,7 +118,7 @@
                 Height="32"
                 Margin="5,0,0,0"
                 Cursor="Hand"
-                ToolTip="Kopiuj secret">
+                ToolTip="Kopiuj sekret Base32">
                             <TextBlock Text="📋"
                        FontSize="14"/>
                         </Button>
