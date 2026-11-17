@@ -20,6 +20,7 @@ OutputBaseFilename=2FARecoveryManager-Setup-{#AppVersion}
 Compression=lzma
 SolidCompression=yes
 WizardStyle=modern
+LanguageDetectionMethod=uilanguage
 PrivilegesRequired=lowest
 UninstallDisplayIcon={app}\2FARecoveryManager.exe
 
