@@ -88,6 +88,8 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
         finally { _copiedSecret = null; }
     }
 
+    public void ClearAll() => Clear();
+
     private void Clear()
     {
         RecoveryPhrase = "";
