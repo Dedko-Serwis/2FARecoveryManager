@@ -1,36 +1,36 @@
-﻿using QRCoder;
+using QRCoder;
+using System;
 using System.IO;
 using System.Windows.Media.Imaging;
 
-namespace QrCodeRecovery.Helpers
+namespace QrCodeRecovery.Helpers;
+
+public static class QrCodeHelper
 {
-    public static class QrCodeHelper
+    public static string BuildOtpAuthUri(string issuer, string accountName, string secret)
     {
-        private const string QrPrefix = "otpauth://totp/";
+        if (string.IsNullOrWhiteSpace(issuer) || string.IsNullOrWhiteSpace(accountName) || string.IsNullOrWhiteSpace(secret))
+            throw new ArgumentException("Issuer, account and secret are required.");
 
-        public static BitmapImage GenerateQrCode(string issuer, string accountName, string secret)
-        {
+        // The issuer prefix and label are URI-escaped separately.
+        string label = Uri.EscapeDataString(issuer) + ":" + Uri.EscapeDataString(accountName);
+        return "otpauth://totp/" + label + "?secret=" + Uri.EscapeDataString(secret) +
+               "&issuer=" + Uri.EscapeDataString(issuer) + "&algorithm=SHA1&digits=6&period=30";
+    }
 
-            // Format URI zgodny z Google Authenticator
-            string uri = $"{QrPrefix}{accountName}?secret={secret}&issuer={issuer}";
-
-            using var qrGenerator = new QRCodeGenerator();
-            using var qrCodeData = qrGenerator.CreateQrCode(uri, QRCodeGenerator.ECCLevel.Q);
-            using var qrCode = new PngByteQRCode(qrCodeData);
-            byte[] qrCodeBytes = qrCode.GetGraphic(20);
-            return ByteArrayToBitmapImage(qrCodeBytes);
-        }
-
-        private static BitmapImage ByteArrayToBitmapImage(byte[] bytes)
-        {
-            using var stream = new MemoryStream(bytes);
-            var image = new BitmapImage();
-            image.BeginInit();
-            image.CacheOption = BitmapCacheOption.OnLoad;
-            image.StreamSource = stream;
-            image.EndInit();
-            image.Freeze();
-            return image;
-        }
+    public static BitmapImage GenerateQrCode(string issuer, string accountName, string secret)
+    {
+        string uri = BuildOtpAuthUri(issuer, accountName, secret);
+        using var generator = new QRCodeGenerator();
+        using var data = generator.CreateQrCode(uri, QRCodeGenerator.ECCLevel.Q);
+        using var qr = new PngByteQRCode(data);
+        using var stream = new MemoryStream(qr.GetGraphic(20));
+        var image = new BitmapImage();
+        image.BeginInit();
+        image.CacheOption = BitmapCacheOption.OnLoad;
+        image.StreamSource = stream;
+        image.EndInit();
+        image.Freeze();
+        return image;
     }
 }
