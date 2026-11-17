@@ -47,3 +47,6 @@ Kod źródłowy projektu jest udostępniony na [licencji MIT](LICENSE). Informac
 Obecna implementacja przechowuje wpisany sekret w pamięci aplikacji, pokazuje go w interfejsie i umożliwia kopiowanie do schowka. **Nie jest to bezpieczny menedżer haseł ani sejf na sekrety.**
 
 Copyright (c) 2026 Leszek Dedko.
+
+## Instalator Release
+Na Windows zainstaluj .NET 10 SDK i Inno Setup 7, a następnie uruchom `./scripts/build-release.ps1` w PowerShell. Skrypt uruchamia testy, publikuje wersję win-x64 zależną od środowiska .NET i buduje instalator w `dist/`. Język instalatora jest dobierany do języka Windows (polski lub angielski). .NET 10 Desktop Runtime należy zainstalować osobno.
