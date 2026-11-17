@@ -2,51 +2,59 @@
 
 Polski | [English](README.md)
 
-Program dla Windows do generowania **kodów QR konfiguracji TOTP** na podstawie istniejącego klucza Base32 lub frazy tekstowej oraz do wyświetlania odpowiadającego mu sześciocyfrowego kodu jednorazowego.
+## Do czego służy program?
+
+**2FARecoveryManager umożliwia odtworzenie konfiguracji uwierzytelniania dwuskładnikowego (2FA/TOTP) na nowym telefonie po zgubieniu, uszkodzeniu lub wymianie poprzedniego.** Podczas włączania 2FA wiele serwisów pokazuje kod QR, a często także klucz tekstowy. Jeśli wcześniej zapisano **oryginalny sekret TOTP**, program może ponownie wygenerować kod QR, który wystarczy zeskanować aplikacją Authenticator na nowym telefonie.
+
+Nie jest potrzebny stary telefon. Potrzebny jest natomiast **zachowany wcześniej sekret** — program nie odczytuje go z uszkodzonego urządzenia ani nie odtwarza z jednorazowych kodów zapasowych serwisu.
+
+## Jak odzyskać generator kodów 2FA?
+
+1. W polu **Serwis / wystawca** wpisz nazwę usługi, np. GitHub.
+2. W polu **Nazwa konta** wpisz identyfikator konta, np. adres e-mail. Te dwa pola służą do opisania wpisu w aplikacji Authenticator.
+3. Wybierz **Klucz TOTP (Base32)** i wprowadź **oryginalny sekret** zapisany podczas konfiguracji 2FA.
+4. Zeskanuj wygenerowany kod QR aplikacją Authenticator na nowym telefonie.
+5. Porównaj sześciocyfrowy kod na telefonie z kodem w programie. Powinny być identyczne, jeśli zegary są zsynchronizowane, a serwis używa standardowych parametrów SHA-1 / 6 cyfr / 30 sekund.
+
+**Ważne:** Odtworzenie tych samych kodów jest możliwe tylko wtedy, gdy podany sekret jest identyczny z oryginalnym, a parametry TOTP są zgodne z ustawieniami serwisu. Program nie zmienia konfiguracji 2FA po stronie serwisu.
+
+## Opis pól
+
+- **Serwis / wystawca** — nazwa usługi, np. GitHub.
+- **Nazwa konta** — identyfikator użytkownika, np. adres e-mail.
+- **Klucz TOTP (Base32)** — istniejący sekret zapisany podczas włączania 2FA. **To zalecany tryb odtwarzania.**
+- **Fraza tekstowa (UTF-8)** — zamienia bajty wpisanego tekstu na sekret Base32. **Nie jest to uniwersalna metoda odzyskiwania**: odtworzy wcześniejsze kody tylko wtedy, gdy serwis od początku korzystał z dokładnie tych samych bajtów jako sekretu.
+- **Zapisana fraza lub klucz** — pole na poufne dane wybranego formatu.
+
+**Kody zapasowe / recovery codes** wydawane przez serwis nie są sekretem TOTP i nie pozwalają odtworzyć kodu QR za pomocą tego programu.
 
 ## Funkcje
-- Aplikacja WPF (.NET 10, Windows)
-- Pola wystawcy (Issuer) i konta (Account)
-- Dwa tryby: **Recovery Key (Base32)** — istniejący sekret TOTP; **Text Phrase** — tekst UTF-8 kodowany do Base32
-- Generowanie QR w formacie `otpauth://totp/`
-- Aktualny sześciocyfrowy kod TOTP (SHA-1, okres 30 sekund)
-- Kopiowanie sekretu Base32 do schowka
 
-## Ważne ograniczenia
-**Program nie odzyskuje utraconego dostępu do kont 2FA i nie zamienia zapasowych kodów odzyskiwania wydanych przez usługę w pierwotny sekret TOTP.** Tryb Text Phrase tworzy sekret z tekstu, ale nie odtwarza istniejącego sekretu. Ma sens tylko wtedy, gdy dana usługa umożliwia zarejestrowanie dokładnie tego sekretu. Nie używaj łatwej do odgadnięcia frazy jako klucza chroniącego konto.
+- Lokalne generowanie kodu QR zgodnego z `otpauth://totp/`
+- Wyświetlanie aktualnego sześciocyfrowego kodu TOTP (SHA-1, 30 sekund)
+- Obsługa sekretu Base32 i frazy UTF-8
+- Kopiowanie sekretu Base32 do schowka, z próbą usunięcia po 30 sekundach, jeśli nie zmieniono jego zawartości
+- Aplikacja Windows WPF oparta na .NET 10
 
-Kod QR zawiera sekret. Każdy, kto go zeskanuje lub sfotografuje, może generować te same kody. Unikaj zrzutów ekranu i udostępniania obrazu. Sekret skopiowany do schowka może tam pozostać.
+## Bezpieczeństwo i ograniczenia
+
+Kod QR zawiera sekret umożliwiający generowanie kodów uwierzytelniających. Chroń go jak hasło; unikaj zrzutów ekranu i udostępniania obrazu. Program nie jest szyfrowanym magazynem kont. Podczas działania sekret znajduje się w pamięci aplikacji. Obecna wersja używa parametrów SHA-1, sześciu cyfr i okresu 30 sekund; nie importuje dowolnych adresów `otpauth://` ani innych algorytmów TOTP.
 
 ## Wymagania i kompilacja
-- Windows i .NET 10 Desktop Runtime (przy publikacji zależnej od środowiska)
-- .NET 10 SDK do kompilacji
+
+Aplikacja wymaga Windows oraz .NET 10 Desktop Runtime (wersja zależna od środowiska). Do kompilacji potrzebny jest .NET 10 SDK.
 
 ```powershell
 git clone https://github.com/Dedko-Serwis/2FARecoveryManager.git
 cd 2FARecoveryManager
-dotnet restore
 dotnet build -c Release
 dotnet run --project 2FARecoveryManager.csproj
 ```
 
-## Obsługa
-1. Wpisz nazwę wystawcy i konta.
-2. Wybierz **Recovery Key (Base32)** dla posiadanego sekretu uwierzytelniania albo **Text Phrase**, aby zakodować tekst jako nowy sekret.
-3. Wpisz wartość — program automatycznie wyświetli kod QR i aktualny TOTP.
-4. Zeskanuj QR zgodnym programem Authenticator i porównaj wyświetlane kody.
+Aby utworzyć instalator, zainstaluj Inno Setup 6 lub 7 i uruchom `./scripts/build-release.ps1`. Skrypt pobiera wersję z `2FARecoveryManager.csproj`, uruchamia testy, publikuje aplikację win-x64 zależną od .NET i tworzy instalator w katalogu `dist/`. Instalator obsługuje język polski i angielski zgodnie z językiem interfejsu Windows.
 
-Program generuje QR lokalnie; nie rejestruje sekretu w usłudze internetowej.
+## Licencja
 
-## Biblioteki i licencja
-- [QRCoder](https://github.com/codebude/QRCoder) 1.8.0 — licencja MIT.
-- .NET / WPF — komponenty platformy Microsoft, objęte odpowiednimi warunkami licencyjnymi.
-
-Kod źródłowy projektu jest udostępniony na [licencji MIT](LICENSE). Informacje o zależnościach: [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md).
-
-## Bezpieczeństwo
-Obecna implementacja przechowuje wpisany sekret w pamięci aplikacji, pokazuje go w interfejsie i umożliwia kopiowanie do schowka. **Nie jest to bezpieczny menedżer haseł ani sejf na sekrety.**
+Kod źródłowy: [MIT](LICENSE). Biblioteka: [QRCoder](https://github.com/codebude/QRCoder) 1.8.0 (MIT). .NET/WPF są komponentami Microsoft na odpowiednich warunkach licencyjnych. Szczegóły: [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md).
 
 Copyright (c) 2026 Leszek Dedko.
-
-## Instalator Release
-Na Windows zainstaluj .NET 10 SDK i Inno Setup 7, a następnie uruchom `./scripts/build-release.ps1` w PowerShell. Skrypt uruchamia testy, publikuje wersję win-x64 zależną od środowiska .NET i buduje instalator w `dist/`. Język instalatora jest dobierany do języka Windows (polski lub angielski). .NET 10 Desktop Runtime należy zainstalować osobno.
