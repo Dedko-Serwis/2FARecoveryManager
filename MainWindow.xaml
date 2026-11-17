@@ -145,7 +145,7 @@
                 </Border>
 
 
-                <Button Content="Wyczyść dane" Command="{Binding ClearCommand}" Margin="0,8,0,4" Padding="8"/>
+                <Button Content="Wyczyść dane" Click="ClearButton_Click" Margin="0,8,0,4" Padding="8"/>
                 <TextBlock Text="{Binding ErrorMessage}" Foreground="#B42318" TextWrapping="Wrap" Margin="0,5,0,8"/>
                 <!-- Kod weryfikacyjny -->
 
