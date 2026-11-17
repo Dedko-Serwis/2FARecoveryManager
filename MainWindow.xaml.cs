@@ -13,6 +13,8 @@ namespace QrCodeRecovery
             _viewModel = new MainViewModel();
             DataContext = _viewModel;
 
+            Closed += (_, _) => _viewModel.Dispose();
+
             // Synchronizacja hasła z ViewModel
             PasswordBoxSecret.PasswordChanged += (s, e) =>
             {
