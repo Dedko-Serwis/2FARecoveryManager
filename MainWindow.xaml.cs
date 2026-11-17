@@ -21,6 +21,12 @@ namespace QrCodeRecovery
                 _viewModel.RecoveryPhrase = PasswordBoxSecret.Password;
             };
         }
+        private void ClearButton_Click(object sender, RoutedEventArgs e)
+        {
+            PasswordBoxSecret.Clear();
+            _viewModel.ClearAll();
+        }
+
         private void PasswordBoxSecret_PasswordChanged(object sender, RoutedEventArgs e)
         {
             if (DataContext is MainViewModel vm)
